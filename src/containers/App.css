@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+h1{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2em;
+    margin-top: 4rem;
+    /* add a font colro that compliments the background */
+    color: #fff;
+}
+body{
+    /* add a orange gradient to body */
+
+}
+
