@@ -1,46 +1,41 @@
-import React, { Component } from 'react'
+
 import CardList from '../components/CardList'
 import SearchBar from '../components/SearchBar'
 import './App.css'
 import ErrorBoundry from '../components/ErrorBoundry'
 import Scroll from  '../components/Scroll'
-class App extends Component{
+import {useState , useEffect} from 'react'
+const App = ()=>{
+    const  [ robots , setRobots] = useState([])
+    const  [ searchField , setSearchfield] = useState('')
 
-    constructor(){
-        super()
-        this.state = {
-            'robots' : [],
-            'searchfield' : ' '
-        }
-    }
-    componentDidMount(){
-        fetch('https://jsonplaceholder.typicode.com/users')
-            .then(response => response.json())
-            .then(users => {this.setState({'robots' : users})})
-    }
-    onSearchChange = (event) => {
-        this.setState({'searchfield' : event.target.value})     
+    useEffect(()=>{
+         fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(users => setRobots(users))
+    } , [])
+    const onSearchChange = (event) => {
+        setSearchfield(event.target.value)     
     
     }
-    render(){
-        const {robots , searchfield} = this.state;
-        const filteredRobots = this.state.robots.filter(robot =>{
-            return robot.name.toLowerCase().includes(searchfield.toLowerCase())
+    
+    const filteredRobots = robots.filter(robot =>{
+        return robot.name.toLowerCase().includes(searchField.toLowerCase())
 
-        })
+    })
    
-        return !robots.length? <h1 className='tc f1 -white'>Hmmmm! Looks like it's taking longer than expected!</h1>:
-            <div className='tc'>
-                <h1>Robo Friends</h1>
-                <SearchBar searchChange={this.onSearchChange} />
-                <Scroll>
-                    <ErrorBoundry>
-                        <CardList robots={filteredRobots}/>
-                    </ErrorBoundry>
-                </Scroll>               
-            </div>
-    
+    return !robots.length? <h1 className='tc f1 -white'>Hmmmm! Looks like it's taking longer than expected!</h1>:
+        <div className='tc'>
+            <h1>Robo Friends</h1>
+            <SearchBar searchChange={onSearchChange} />
+            <Scroll>
+                <ErrorBoundry>
+                    <CardList robots={filteredRobots}/>
+                </ErrorBoundry>
+            </Scroll>               
+        </div>
+
     }
-}
+
 
 export default App;
