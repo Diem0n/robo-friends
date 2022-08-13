@@ -1,24 +1,31 @@
-
+import React from 'react'
 import CardList from '../components/CardList'
 import SearchBar from '../components/SearchBar'
 import './App.css'
 import ErrorBoundry from '../components/ErrorBoundry'
 import Scroll from  '../components/Scroll'
 import {useState , useEffect} from 'react'
-const App = ()=>{
-    const  [ robots , setRobots] = useState([])
-    const  [ searchField , setSearchfield] = useState('')
+import {setSearchfield} from '../actions'
+import { connect } from 'react-redux'
 
+const mapStateToProps = state =>{
+    return {
+        searchField : state.searchField
+    }
+}
+const mapDispatchToProps = (dispatch) =>{
+    return {
+        onSearchChange: (event) => dispatch(setSearchfield(event.target.value))
+    }
+}
+const App = ({searchField , onSearchChange})=>{
+    const  [ robots , setRobots] = useState([])
     useEffect(()=>{
+        
          fetch('https://jsonplaceholder.typicode.com/users')
         .then(response => response.json())
         .then(users => setRobots(users))
     } , [])
-    const onSearchChange = (event) => {
-        setSearchfield(event.target.value)     
-    
-    }
-    
     const filteredRobots = robots.filter(robot =>{
         return robot.name.toLowerCase().includes(searchField.toLowerCase())
 
@@ -26,7 +33,7 @@ const App = ()=>{
    
     return !robots.length? <h1 className='tc f1 -white'>Hmmmm! Looks like it's taking longer than expected!</h1>:
         <div className='tc'>
-            <h1>Robo Friends</h1>
+            <h1>Robots</h1>
             <SearchBar searchChange={onSearchChange} />
             <Scroll>
                 <ErrorBoundry>
@@ -38,4 +45,4 @@ const App = ()=>{
     }
 
 
-export default App;
+export default  connect(mapStateToProps , mapDispatchToProps)(App);
